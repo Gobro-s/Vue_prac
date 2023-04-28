@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conditionals and Loops</title>
+  </head>
+  <body>
+    <!-- <div id="app-3"><p v-if="seen">이제 나를 볼 수 있어요</p></div> -->
+    <div id="app4">
+      <ol>
+        <li v-for="todo in todos">{{ todo.text }}</li>
+      </ol>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+      //########################################
+      //############ 조건문 예시 ################
+      // element가 표시 되는지에 대한 여부 제어
+      //   const app3 = new Vue({
+      //     el: '#app-3',
+      //     data: {
+      //       seen: true
+      //     }
+      //   })
+      // ############################################
+      //############### 반복문 예시###################
+      const app4 = new Vue({
+        el: '#app4',
+        data: {
+          todos: [
+            { text: 'Learn JavaScript' },
+            { text: 'Learn Vue' },
+            { text: 'Build something cool' }
+          ]
+        }
+      })
+      // ### console 창에서 app4.todos.push ({ text : blahblah }) 하면 새 내용 추가 가능
+      // ####################################################################
+    </script>
+  </body>
+</html>
