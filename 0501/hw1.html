@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <div v-for="(item, index) in add_computed" :key="`arry-${index}`">
+      <p>{{ item }}</p>
+      <!-- <p>{{ add_computed }}</p>
+        <p>{{ add_computed }}</p> -->
+      </div>
+      <!-- <p>{{ nums }}</p> -->
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        nums : [1, 2, 3, 4, 5, 6]
+      },
+      computed: {
+        add_computed: function() {
+          let res = []
+          for (let num of this.nums){
+            // console.log(num);
+            if (num%2){
+              res.push(num)
+            }
+
+          }
+          return res
+          // console.log('이것이 this');
+          // console.log('이것이 this');
+          // console.log(this);
+          // console.log('이것이 this');
+          // console.log('이것이 this');
+        }
+      }
+    })
+  </script>
+</body>
+</html>

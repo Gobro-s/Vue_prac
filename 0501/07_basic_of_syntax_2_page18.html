@@ -20,7 +20,7 @@
       <p>{{ index }}번째 아이템 {{ item }}</p>
     </div>
 
-    <div v-for="(item, index) in myArr2" :key="`arry-${index}`">
+    <div v-for="(item, index) in myArr2" :key="`arry-${index}-key`" @click="func1(`arry-${index}`)">
       <p>{{ index }}번째 아이템</p>
 		  <p>{{ item.name }}</p>
     </div>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    /* 가로줄과 글자색 회색 */
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+  <h1>Todo List</h1>
+
+  <!-- vue 로 접근하기 위해 div 태그 내부로 이동 -->
+  <div id="app">
+    <input type="text" v-model="content">
+    <button @click="addTodo">+</button>
+    <ul>
+      <!-- v-for 에 key 가 없으면 문제가 발생한다. (코드 가장 하단 주석 참조: line 95)-->
+      <li v-for="todo in todoList" :key="todo.date">  <!-- key에 todo 값을 적용시키기 위해 v-bind 사용! key 등록하면 문제 해결!! -->
+        <input type="checkbox" @click="updateTodo(todo)"> <!-- 내가 누른 데이터를 전달할 수 있음 -->
+        <!-- 조건부 바인딩 { 나타낼 값 : 값(조건) }  -->
+        <!-- 값(조건) 이 true 면 나타나고 false 면 사라진다. -->
+        <span :class="{ completed: todo.completed }">{{ todo.content }}</span>
+      </li>
+    </ul>
+    <br>
+    <!--
+      완료 목록 삭제는 completed 값이 true 인 todo만 삭제해야 한다.
+      마찬가지로 button 을 클릭하면서 시작! @click="메서드명"
+    -->
+    <button @click="deleteTodo">완료 목록 삭제</button>
+  </div>
+  
+
+  <!-- vue cdn 등록 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script>
+    // vue 기본 형태를 작성
+    const app = new Vue({
+      el: '#app',   // 조작하려는 div 와 연결
+      data: {
+        content: '',
+        // todo: '', // 값이 하나만 나옴
+        todoList: [], // 여러개의 데이터를 저장하기 위해
+      },
+      methods: {
+        // addTodo: function () {}
+        addTodo (event) {
+          // console.log(event.target)
+          // 할 일
+          // input에 입력된 것을 화면에 출력하자!!
+          // console.log(this.content)  // 입력 값 확보
+          // 확보된 값을 저장하자 어디에? data 에 정의된 변수에
+          // this.todoList.push(this.content) // 이렇게 하면 content 만 저장됨
+          // 상태 변수도 저장하기 위해 object 형태로 만들어서 저장
+          const todo = {
+            content: this.content,
+            completed: false,      // checkbox가 눌렸는지 저장하는 부분
+            date: Date.now(),      // 중복없는 시간 데이터 저장! Date.now() 현재 시간 값 (UTC 기준으로 밀리초 반환 자세한 내용은 MDN Date.now 검색)
+          }
+          this.todoList.push(todo)
+          // 등록 후 input에 남아 있는 텍스트를 없애자!
+          this.content = ''
+        },
+
+        updateTodo (todo) {
+          // 체크 박스가 눌렸는지 확인하고 class 정보를 변경
+          // 체크 박스가 눌렸는지 여부를 저장하는 상태 변수가 필요함!!
+          todo.completed = !todo.completed  // 토글 
+        },  // 끝에 콤마 찍는 것은 생활화 하자!! 실수 많이 하는 Point!!
+
+        deleteTodo () {
+          // 할 일
+          // completed가 false 인 데이터만 골라내자!!
+          // Array Helper Method 에서 filter 사용!! 
+          //   filter 는 콜백함수의 return이 true 인 값만 모아서 새로운 배열을 리턴한다!!
+          //   새로운 배열을 리턴한다! 중요
+          // 그럼 새로운 배열을 todoList에 다시 저장하면 되겠구나!! 
+          // (completed가 false 인 데이터를 filter로 걸러서 나오는 변수를 todoList에 저장하면 되겠구나)
+          // newTodoList에 completed가 false 인 데이터가 모인 배열을 저장하자!
+          const newTodoList = this.todoList.filter(function (todo) {
+            return !todo.completed  // completed 가 false 인 데이터만 모으기 위해
+          })
+          this.todoList = newTodoList  // 새로운 배열을 다시 저장하자! // 삭제 끝!
+          // todoList 값이 바뀌면서 true 인 값이 사라진 것을 확인할 수 있다!
+
+
+          // ############ 삭제시 문제점 (v-for 에서 key가 없을 때 발생하는 문제)########
+          // 근데 문제가 있다!!!
+          // 5개의 할일을 등록하고 
+          // 2번째 3번째 할 일을 완료로 체크한 후에
+          // 삭제를 누르면 체크 표시가 화면에 남아있다!!! 버그다!!
+          // 해당 문제는 v-for 에 key 를 사용하지 않았을때 발생하는 버그다!!
+          // v-for 에 key 를 설정해야 한다.
+          // key 는 중복없는 유일한 값을 설정해야 한다!
+          // 중복없이 유일한 값으로 가장 적절한 값은 바로 시간이다!!!
+          // 시간은 매 순간 변하기 때문에 중복될 일이 없다!
+          // 그럼 이 시간을 어떻게 저장할까?
+          // 바로 todo가 생성될 때 생성 시간을 저장하면 된다!!
+          // createTodo 에서 date 를 추가하고 해당 내용을 v-for 에서 사용하자!!
+        },
+      },
+    })
+  </script>
+</body>
+</html>
