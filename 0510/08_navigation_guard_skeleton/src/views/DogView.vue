@@ -12,14 +12,14 @@ import axios from "axios";
 
 export default {
   name: "DogView",
-  data() {
+  // data() {
     
-    return {
-      breed: '',
-      imgSrc: null,
-      message: '품종을 입력해주세요'
-    };
-  },
+  //   return {
+  //     breed: '',
+  //     imgSrc: null,
+  //     message: '품종을 입력해주세요'
+  //   };
+  // },
   methods: {
     getDogImage() {
       
@@ -60,7 +60,7 @@ const dogImageSearchURL = `https://dog.ceo/api/breed/${breed}/images/random`
     },
   },
   created() {
-    //this.getDogImage();
+    this.getDogImage();
   },
 };
 </script>
